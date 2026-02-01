@@ -1,20 +1,10 @@
 import { useState } from 'react';
 import { projects, tasks, timeEntries } from '../services/api';
 
-export default function TimesheetPage() {
-  const [selectedProject, setSelectedProject] = useState(projects[0].id);
-  const [selectedTask, setSelectedTask] = useState(
-    tasks.find(t => t.projectId === projects[0].id)?.id
-  );
 
-  const filteredTasks = tasks.filter(t => t.projectId === selectedProject);
-  const entriesForTask = timeEntries.filter(te => te.taskId === selectedTask);
-
-  return (
-    <div style={{ padding: '1rem' }}>
-      <h2>Timesheet</h2>
-
-      {/* Project Selector */}
+function ProjectSelector({ selectedProject, setSelectedProject, setSelectedTask }) 
+{
+    return (
       <label>
         Project:
         <select
@@ -30,6 +20,26 @@ export default function TimesheetPage() {
           ))}
         </select>
       </label>
+    );
+
+}
+
+export default function TimesheetPage() {
+  const [selectedProject, setSelectedProject] = useState(projects[0].id);
+  const [selectedTask, setSelectedTask] = useState(
+    tasks.find(t => t.projectId === projects[0].id)?.id
+  );
+
+  const filteredTasks = tasks.filter(t => t.projectId === selectedProject);
+  const entriesForTask = timeEntries.filter(te => te.taskId === selectedTask);
+
+  return (
+    <div style={{ padding: '1rem' }}>
+      <h2>Timesheet</h2>
+
+      {/* Project Selector */}
+      {ProjectSelector({ selectedProject, setSelectedProject, setSelectedTask })}
+
 
       {/* Task Selector */}
       <label style={{ marginLeft: '1rem' }}>
