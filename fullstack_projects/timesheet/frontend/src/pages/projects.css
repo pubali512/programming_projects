@@ -1,0 +1,50 @@
+:root {
+  --sidebar-bg: #f8f9fa;
+  --active-blue: #e7f1ff;
+  --text-main: #212529;
+  --accent-blue: #0056d2;
+  --border-color: #dee2e6;
+}
+
+.sidebar {
+  background-color: var(--sidebar-bg);
+  border-right: 1px solid var(--border-color);
+  width:20%;
+  padding: 1rem;
+  display: flex; 
+  flex-direction: column; 
+  gap: '10px'
+}
+
+.sidebar button {
+  background: transparent;
+  color: var(--text-main);
+  border: none;
+  text-align: left;
+  padding: 12px 16px;
+  border-radius: 6px;
+  transition: background 0.2s ease;
+}
+
+/* The "Selected" state */
+.sidebar button.active {
+  background-color: var(--active-blue);
+  color: var(--accent-blue);
+  font-weight: 600;
+}
+
+.sidebar button:hover:not(.active) {
+  background-color: #f0f0f0;
+}
+
+.main-form-area {
+  background-color: #ffffff;
+}
+
+.apply-button {
+  background-color: var(--accent-blue);
+  color: white;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
