@@ -3,82 +3,168 @@ import React, { useState } from 'react';
 import './projects.css';
 import '../components/common.css';
 
-// Mock data - in a real app, this comes from your database/state
-const existingProjects = [
-  { id: 'P001', name: 'Internal Admin' },
-  { id: 'P002', name: 'Client Alpha' }
-];
-
-function applyInputChanges(e) {
-
-  const [name, value] = [e.target.name, e.target.value]; 
+// Import mock data or API services as needed
+import { projects, tasks } from '../services/api';
 
 
-  // Placeholder for handling input changes
-  console.log('Input changed:', e.target.value);
-}
-
-function renderForm(mode) {
-  switch (mode) {
-    case 'create_project':
-      return (
-        <>
-          <h3>Create New Project</h3>
-          <div className="form-grid">
-            <label>Project Name</label>
-            <input type="text" className="input-field-small" placeholder="Name" />
-
-            <label>Project ID</label>
-            <input type="text" className="input-field-small" placeholder="ID" />
-
-            <label>Description</label>
-            <textarea className="input-textarea" placeholder="Description"></textarea>
-
-            <button className="apply-button">Apply</button>
-          </div>
-        </>
-      );
-    case 'create_task':
-      return (
-        <>
-          <h3>Create New Task</h3>
-          <select>
-            <option>Select Existing Project...</option>
-            {existingProjects.map(p => <option key={p.id}>{p.name}</option>)}
-          </select>
-          <input type="text" placeholder="Task Name" />
-          <input type="text" placeholder="Task ID" />
-          <textarea placeholder="Description"></textarea>
-        </>
-      );
-    case 'edit_project':
-      return (
-        <>
-          <h3>Edit Project</h3>
-          <select><option>Select Project to Edit...</option></select>
-          <input type="text" placeholder="New Project Name" />
-          <textarea placeholder="New Description"></textarea>
-        </>
-      );
-    case 'edit_task':
-      return (
-        <>
-          <h3>Edit Task</h3>
-          <select><option>Select Project...</option></select>
-          <select><option>Select Task...</option></select>
-          <input type="text" placeholder="New Task Name" />
-          <textarea placeholder="New Description"></textarea>
-        </>
-      );
-    default: return null;
-  }
+const FormState = {
+  create_project: {
+    projectName: '',
+    projectId: '',
+    description: '',
+  },
+  create_task: {
+    project: '',
+    taskName: '',
+    taskId: '',
+    description: '',
+  },
+  edit_project: {
+    selectProjectId: '',
+    projectName: '',
+    description: '',
+  },
+  edit_task: {
+    selectProjectId: '',
+    selectTaskId: '',
+    taskName: '',
+    description: '',
+  },
 };
 
 
-export default function ProjectsPage() {
-  // 'create_project', 'create_task', 'edit_project', 'edit_task'
-  const [mode, setMode] = useState('create_project');
+// A truly generic handler
+function handleGenericChange(formName, e, setFormData) {  
+  
+  const { name, value } = e.target;
 
+  console.log(`Form: ${formName}, Field: ${name}, Value: ${value}`); 
+  setFormData(prev => ({
+    ...prev,
+    [formName]: {
+      ...prev[formName],
+      [name]: value
+    }
+  }));
+};
+
+
+function CreateProjectForm(formData, setFormData) {
+  return (
+    <>
+      <h3 className='form-header'>Create New Project</h3>
+      <div className="form-grid">
+      <label>Project Name</label>
+      <input type="text" className="input-field-small" placeholder={formData.create_project.projectName || "Project Name"} name="projectName" onChange={e => handleGenericChange('create_project', e, setFormData)}/>
+
+      <label>Project ID</label>
+      <input type="text" className="input-field-small" placeholder={formData.create_project.projectId || "Project ID"} name="projectId" onChange={e => handleGenericChange('create_project', e, setFormData)}/>
+
+      <label>Description</label>
+      <textarea className="input-textarea" placeholder={formData.create_project.description || "Project Description"} name="description" onChange={e => handleGenericChange('create_project', e, setFormData)}></textarea>
+
+      <button className="apply-button" >Apply</button>
+      </div>
+    </>
+    );
+}
+
+function CreateTaskForm(formData, setFormData) {
+  return (
+    <>
+      <h3 className='form-header'>Create New Task</h3>
+      <div className="form-grid">
+        <label>Project</label>
+        <select className="input-field-small" name="project" value={formData.create_task.project} onChange={e => handleGenericChange('create_task', e, setFormData)}>
+          <option>Select Existing Project...</option>
+          {projects.map(p => <option key={p.id}>{p.name}</option>)}
+        </select>
+
+        <label>Task Name</label>
+        <input type="text" className="input-field-small" placeholder={formData.create_task.taskName || "Task Name"} name="taskName" onChange={e => handleGenericChange('create_task', e, setFormData)} />
+
+        <label>Task ID</label>
+        <input type="text" className="input-field-small" placeholder={formData.create_task.taskId || "Task ID"} name="taskId" onChange={e => handleGenericChange('create_task', e, setFormData)} />
+
+        <label>Description</label>
+        <textarea className="input-textarea" placeholder={formData.create_task.description || "Description"} name="description" onChange={e => handleGenericChange('create_task', e, setFormData)}></textarea>
+
+        <button className="apply-button">Apply</button>
+      </div>
+    </>
+  );
+}
+
+function EditProjectForm(formData, setFormData) {
+  return (
+    <>
+      <h3 className='form-header'>Edit Project</h3>
+      <div className="form-grid">
+        <label>Select Project</label>
+        <select className="input-field-small" name="selectProjectId" value={formData.edit_project.selectProjectId} onChange={e => handleGenericChange('edit_project', e, setFormData)}>
+          <option>Select Project to Edit...</option>
+          {projects.map(p => <option key={p.id}>{p.name}</option>)}
+        </select>
+
+        <label>Project Name</label>
+        <input type="text" className="input-field-small" placeholder={formData.edit_project.projectName || "New Project Name"} name="projectName" onChange={e => handleGenericChange('edit_project', e, setFormData)} />
+
+        <label>Description</label>
+        <textarea className="input-textarea" placeholder={formData.edit_project.description || "New Description"} name="description" onChange={e => handleGenericChange('edit_project', e, setFormData)}></textarea>
+
+        <button className="apply-button">Apply</button>
+      </div>
+    </>
+  );
+}
+
+function EditTaskForm(formData, setFormData) {
+  return (
+    <>
+      <h3 className='form-header'>Edit Task</h3>
+      <div className="form-grid">
+        <label>Project</label>
+        <select className="input-field-small" name="selectProjectId" value={formData.edit_task.selectProjectId} onChange={e => handleGenericChange('edit_task', e, setFormData)}>
+          <option>Select Project...</option>
+          {projects.map(p => <option key={p.id}>{p.name}</option>)}
+        </select>
+
+        <label>Task</label>
+        <select className="input-field-small" name="selectTaskId" value={formData.edit_task.selectTaskId} onChange={e => handleGenericChange('edit_task', e, setFormData)}>
+          <option>Select Task...</option>
+        </select>
+
+        <label>Task Name</label>
+        <input type="text" className="input-field-small" placeholder={formData.edit_task.taskName || "New Task Name"} name="taskName" onChange={e => handleGenericChange('edit_task', e, setFormData)} />
+
+        <label>Description</label>
+        <textarea className="input-textarea" placeholder={formData.edit_task.description || "New Description"} name="description" onChange={e => handleGenericChange('edit_task', e, setFormData)}></textarea>
+
+        <button className="apply-button">Apply</button>
+      </div>
+    </>
+  );
+}
+
+
+function renderForm(mode, formData, setFormData) {
+  switch (mode) {
+    case 'create_project':
+      return CreateProjectForm(formData, setFormData);
+    case 'create_task':
+      return CreateTaskForm(formData, setFormData);
+    case 'edit_project':
+      return EditProjectForm(formData, setFormData);
+    case 'edit_task':
+      return EditTaskForm(formData, setFormData);
+    default: return null;
+  }
+}
+
+export default function ProjectsPage() {
+
+  const [mode, setMode] = useState('create_project');
+  const [formData, setFormData] = useState(FormState); 
 
   return (
     <div style={{ display: 'flex', height: '80vh', gap: '2rem' }}>
@@ -95,7 +181,7 @@ export default function ProjectsPage() {
       {/* RIGHT PANEL: FORM CONTEXT */}
       <div style={{ flex: 1, position: 'relative', border: '1px solid #ddd', padding: '2rem' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          {renderForm(mode)}
+          {renderForm(mode, formData, setFormData)}
         </div>
       </div>
     </div>
