@@ -48,6 +48,10 @@ function handleGenericChange(formName, e, setFormData) {
   }));
 };
 
+function handleSubmit(formName, e, formData) {
+  console.log(`Submitting form: ${formName}`, formData[formName]);
+}
+
 
 function CreateProjectForm(formData, setFormData) {
   return (
@@ -63,7 +67,7 @@ function CreateProjectForm(formData, setFormData) {
       <label>Description</label>
       <textarea className="input-textarea" placeholder={formData.create_project.description || "Project Description"} name="description" onChange={e => handleGenericChange('create_project', e, setFormData)}></textarea>
 
-      <button className="apply-button" >Apply</button>
+      <button className="apply-button" onClick={e => handleSubmit('create_project', e, formData)}>Apply</button>
       </div>
     </>
     );
@@ -89,7 +93,7 @@ function CreateTaskForm(formData, setFormData) {
         <label>Description</label>
         <textarea className="input-textarea" placeholder={formData.create_task.description || "Description"} name="description" onChange={e => handleGenericChange('create_task', e, setFormData)}></textarea>
 
-        <button className="apply-button">Apply</button>
+        <button className="apply-button" onClick={e => handleSubmit('create_task', e, formData)}>Apply</button>
       </div>
     </>
   );
@@ -100,22 +104,22 @@ function EditProjectForm(formData, setFormData) {
     <>
       <h3 className='form-header'>Edit Project</h3>
       <div className="form-grid">
-        <label>Select Project</label>
-        <select className="input-field-small" name="selectProjectId" value={formData.edit_project.selectProjectId} onChange={e => handleGenericChange('edit_project', e, setFormData)}>
-          <option>Select Project to Edit...</option>
-          {projects.map(p => <option key={p.id}>{p.name}</option>)}
-        </select>
+      <label>Select Project</label>
+      <select className="input-field-small" name="selectProjectId" value={formData.edit_project.selectProjectId} onChange={e => handleGenericChange('edit_project', e, setFormData)}>
+        <option>Select Project to Edit...</option>
+        {projects.map(p => <option key={p.id}>{p.id} ({p.name})</option>)}
+      </select>
 
-        <label>Project Name</label>
-        <input type="text" className="input-field-small" placeholder={formData.edit_project.projectName || "New Project Name"} name="projectName" onChange={e => handleGenericChange('edit_project', e, setFormData)} />
+      <label>Project Name</label>
+      <input type="text" className="input-field-small" placeholder={formData.edit_project.projectName || "New Project Name"} name="projectName" onChange={e => handleGenericChange('edit_project', e, setFormData)} />
 
-        <label>Description</label>
-        <textarea className="input-textarea" placeholder={formData.edit_project.description || "New Description"} name="description" onChange={e => handleGenericChange('edit_project', e, setFormData)}></textarea>
+      <label>Description</label>
+      <textarea className="input-textarea" placeholder={formData.edit_project.description || "New Description"} name="description" onChange={e => handleGenericChange('edit_project', e, setFormData)}></textarea>
 
-        <button className="apply-button">Apply</button>
+      <button className="apply-button" onClick={e => handleSubmit('edit_project', e, formData)}>Apply</button>
       </div>
     </>
-  );
+    );
 }
 
 function EditTaskForm(formData, setFormData) {
@@ -140,7 +144,7 @@ function EditTaskForm(formData, setFormData) {
         <label>Description</label>
         <textarea className="input-textarea" placeholder={formData.edit_task.description || "New Description"} name="description" onChange={e => handleGenericChange('edit_task', e, setFormData)}></textarea>
 
-        <button className="apply-button">Apply</button>
+        <button className="apply-button" onClick={e => handleSubmit('edit_task', e, formData)}>Apply</button>
       </div>
     </>
   );
