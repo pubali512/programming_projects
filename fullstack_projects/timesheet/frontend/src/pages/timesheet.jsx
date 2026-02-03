@@ -1,78 +1,99 @@
-import { useState } from 'react';
-import { projects, tasks, timeEntries } from '../services/api';
+import React, { useState } from 'react';
+import './timesheet.css';
+import { projects, tasks } from '../services/api';
 
 
-function ProjectSelector({ selectedProject, setSelectedProject, setSelectedTask }) 
-{
-    return (
-      <label>
-        Project:
-        <select
-          value={selectedProject}
-          onChange={e => {
-            const projectId = parseInt(e.target.value);
-            setSelectedProject(projectId);
-            setSelectedTask(tasks.find(t => t.projectId === projectId)?.id);
-          }}
-        >
-          {projects.map(p => (
-            <option key={p.id} value={p.id}>{p.name}</option>
-          ))}
-        </select>
-      </label>
-    );
+function DayPickerSidebar({ selectedDay, setSelectedDay, timesheetData }) {
+  return (
+    <aside className="day-picker-sidebar">
+      <div className="week-selector">
+        <label>Week Starting</label>
+        <input type="date" />
+      </div>
 
+      <div className="day-list">
+        {Object.keys(timesheetData).map(day => (
+          <div
+            key={day}
+            className={`day-card ${selectedDay === day ? 'active' : ''}`}
+            onClick={() => setSelectedDay(day)}
+          >
+            <div className="day-info">
+              <span className="day-name">{day}</span>
+              <span className="day-total">
+                {timesheetData[day].reduce((sum, t) => sum + Number(t.hours || 0), 0)}h
+              </span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </aside>
+  );
 }
 
-export default function TimesheetPage() {
-  const [selectedProject, setSelectedProject] = useState(projects[0].id);
-  const [selectedTask, setSelectedTask] = useState(
-    tasks.find(t => t.projectId === projects[0].id)?.id
-  );
+function TaskDetailsArea({timesheetData, selectedDay, addTask}) {
 
-  const filteredTasks = tasks.filter(t => t.projectId === selectedProject);
-  const entriesForTask = timeEntries.filter(te => te.taskId === selectedTask);
+  console.log(selectedDay);
+
 
   return (
-    <div style={{ padding: '1rem' }}>
-      <h2>Timesheet</h2>
+    <main className="task-details-area">
+      <h2>{selectedDay} Log</h2>
 
-      {/* Project Selector */}
-      {ProjectSelector({ selectedProject, setSelectedProject, setSelectedTask })}
+      <div className="task-header-row">
+        <span>Project</span>
+        <span>Task</span>
+        <span>Hours</span>
+        <span>Notes</span>
+      </div>
+
+      {timesheetData[selectedDay].map((entry) => (
+        <div key={entry.id} className="task-row">
+          <select><option>Select Project</option></select>
+          <select><option>Select Task</option></select>
+          <input type="number" placeholder="0.0" className="hrs-input" />
+          <input type="text" placeholder="What did you do?" className="note-input" />
+        </div>
+      ))}
+
+      <button className="add-task-btn" onClick={addTask}>+ Add Task</button>
+    </main>
+  );
+}
 
 
-      {/* Task Selector */}
-      <label style={{ marginLeft: '1rem' }}>
-        Task:
-        <select
-          value={selectedTask}
-          onChange={e => setSelectedTask(parseInt(e.target.value))}
-        >
-          {filteredTasks.map(t => (
-            <option key={t.id} value={t.id}>{t.name}</option>
-          ))}
-        </select>
-      </label>
+export default function TimesheetPage() {
+  const [selectedDay, setSelectedDay] = useState('Monday');
 
-      {/* Time Entries Table */}
-      <table style={{ marginTop: '1rem', borderCollapse: 'collapse', width: '100%' }}>
-        <thead>
-          <tr>
-            <th style={{ border: '1px solid #ccc', padding: '0.5rem' }}>Date</th>
-            <th style={{ border: '1px solid #ccc', padding: '0.5rem' }}>Hours</th>
-            <th style={{ border: '1px solid #ccc', padding: '0.5rem' }}>Notes</th>
-          </tr>
-        </thead>
-        <tbody>
-          {entriesForTask.map(e => (
-            <tr key={e.id}>
-              <td style={{ border: '1px solid #ccc', padding: '0.5rem' }}>{e.date}</td>
-              <td style={{ border: '1px solid #ccc', padding: '0.5rem' }}>{e.hours}</td>
-              <td style={{ border: '1px solid #ccc', padding: '0.5rem' }}>{e.notes}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+  // Data structure: An object where keys are days, containing arrays of tasks
+  const [timesheetData, setTimesheetData] = useState({
+    Monday: [],
+    Tuesday: [],
+    Wednesday: [],
+    Thursday: [],
+    Friday: [],
+    Saturday: [],
+    Sunday: []
+  });
+
+  const addTask = () => {
+    const newTask = { id: Date.now(), project: '', task: '', hours: '', note: '' };
+    setTimesheetData(prev => ({
+      ...prev,
+      [selectedDay]: [...prev[selectedDay], newTask]
+    }));
+  };
+
+  console.log(selectedDay);
+  console.log(timesheetData);
+
+  return (
+    <div className="timesheet-container">
+      {/* LEFT: Week Picker & Day Summary */}
+      <DayPickerSidebar selectedDay={selectedDay} setSelectedDay={setSelectedDay} timesheetData={timesheetData} />
+
+      {/* RIGHT: Task List for selected day */}
+      <TaskDetailsArea timesheetData={timesheetData} selectedDay={selectedDay} addTask={addTask} />
     </div>
   );
 }
