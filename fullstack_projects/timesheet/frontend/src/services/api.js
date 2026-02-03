@@ -1,12 +1,12 @@
 export const projects = [
-  { id: 1, name: 'Project Alpha' },
-  { id: 2, name: 'Project Beta' },
+  { id: 1, name: 'Project Alpha', description: 'Description for Project Alpha' },
+  { id: 2, name: 'Project Beta', description: 'Description for Project Beta' },
 ];
 
 export const tasks = [
-  { id: 1, projectId: 1, name: 'Design UI' },
-  { id: 2, projectId: 1, name: 'Backend API' },
-  { id: 3, projectId: 2, name: 'Database Migration' },
+  { id: 1, projectId: 1, name: 'Design UI', description: 'Create wireframes and mockups' },
+  { id: 2, projectId: 1, name: 'Backend API',description: 'Develop RESTful API' },
+  { id: 3, projectId: 2, name: 'Database Migration',description: 'Migrate data to new schema' },
 ];
 
 export const timeEntries = [

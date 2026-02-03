@@ -1,14 +1,14 @@
 import { Routes, Route } from 'react-router-dom';
 import ProjectsPage from '../pages/projects';
 import TimesheetPage from '../pages/timesheet';
-import TasksPage from '../pages/tasks'; 
+import DashboardPage from '../pages/dashboard';
 
 export default function AppRouter() {
-  return (
-      <Routes>
-        <Route path="/" element={<TimesheetPage />} />
-        <Route path="/projects" element={<ProjectsPage />} />
-        <Route path="/tasks" element={<TasksPage />} />
-      </Routes>
-  );
+    return (
+        <Routes>
+            <Route path="/" element={<DashboardPage />} />
+            <Route path="/projects" element={<ProjectsPage />} />
+            <Route path="/timesheet" element={<TimesheetPage />} />
+        </Routes>
+    );
 }

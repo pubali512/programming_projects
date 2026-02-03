@@ -53,7 +53,8 @@ function handleSubmit(formName, e, formData) {
 }
 
 
-function CreateProjectForm(formData, setFormData) {
+function CreateProjectForm({formData, setFormData}) {
+
   return (
     <>
       <h3 className='form-header'>Create New Project</h3>
@@ -73,7 +74,7 @@ function CreateProjectForm(formData, setFormData) {
     );
 }
 
-function CreateTaskForm(formData, setFormData) {
+function CreateTaskForm({formData, setFormData}) {
   return (
     <>
       <h3 className='form-header'>Create New Task</h3>
@@ -99,7 +100,7 @@ function CreateTaskForm(formData, setFormData) {
   );
 }
 
-function EditProjectForm(formData, setFormData) {
+function EditProjectForm({formData, setFormData}) {
   return (
     <>
       <h3 className='form-header'>Edit Project</h3>
@@ -122,7 +123,7 @@ function EditProjectForm(formData, setFormData) {
     );
 }
 
-function EditTaskForm(formData, setFormData) {
+function EditTaskForm({formData, setFormData}) {
   return (
     <>
       <h3 className='form-header'>Edit Task</h3>
@@ -151,16 +152,19 @@ function EditTaskForm(formData, setFormData) {
 }
 
 
-function renderForm(mode, formData, setFormData) {
+function RenderForm({mode, formData, setFormData}) {
+  console.log(`Rendering form for mode: ${mode}`);
+  console.log(formData);
+
   switch (mode) {
     case 'create_project':
-      return CreateProjectForm(formData, setFormData);
+      return <CreateProjectForm formData={formData} setFormData={setFormData} />;
     case 'create_task':
-      return CreateTaskForm(formData, setFormData);
+      return <CreateTaskForm formData={formData} setFormData={setFormData} />;
     case 'edit_project':
-      return EditProjectForm(formData, setFormData);
+      return <EditProjectForm formData={formData} setFormData={setFormData} />;
     case 'edit_task':
-      return EditTaskForm(formData, setFormData);
+      return <EditTaskForm formData={formData} setFormData={setFormData} />;
     default: return null;
   }
 }
@@ -173,8 +177,6 @@ export default function ProjectsPage() {
   return (
     <div style={{ display: 'flex', height: '80vh', gap: '2rem' }}>
       {/* LEFT PANEL: NAVIGATION COMMANDS */}
-      {/* <div style={{ width: '250px', display: 'flex', flexDirection: 'column', gap: '10px' }}> */}
-
       <div className="sidebar">
         <button onClick={() => setMode('create_project')}>Create Project</button>
         <button onClick={() => setMode('create_task')}>Create Task</button>
@@ -185,7 +187,7 @@ export default function ProjectsPage() {
       {/* RIGHT PANEL: FORM CONTEXT */}
       <div style={{ flex: 1, position: 'relative', border: '1px solid #ddd', padding: '2rem' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          {renderForm(mode, formData, setFormData)}
+          <RenderForm mode={mode} formData={formData} setFormData={setFormData}/>
         </div>
       </div>
     </div>
