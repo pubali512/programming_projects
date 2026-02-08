@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
-import '../styles/Projects.css';
 import '../styles/Common.css';
+import '../styles/Projects.css'
 
 // Import mock data or API services as needed
 import { projects, tasks } from '../services/api';
@@ -155,18 +155,41 @@ function EditProjectForm({ formData, setFormData }) {
       <h3 className='form-header'>Edit Project</h3>
       <div className="form-grid">
         <label>Select Project</label>
-        <select className="input-field-small" name="selectProjectId" value={formData.edit_project.selectProjectId} onChange={e => handleGenericChange('edit_project', e, setFormData)}>
+        <select
+          className="input-field-small"
+          name="selectProjectId"
+          value={formData.edit_project.selectProjectId}
+          onChange={e => handleGenericChange('edit_project', e, setFormData)}
+        >
           <option>Select Project to Edit...</option>
-          {projects.map(p => <option key={p.id}>{p.id} ({p.name})</option>)}
+          {projects.map(p => (
+            <option key={p.id}>{p.id} ({p.name})</option>
+          ))}
         </select>
 
         <label>Project Name</label>
-        <input type="text" className="input-field-small" placeholder={formData.edit_project.projectName || "New Project Name"} name="projectName" onChange={e => handleGenericChange('edit_project', e, setFormData)} />
+        <input
+          type="text"
+          className="input-field-small"
+          placeholder={formData.edit_project.projectName || "New Project Name"}
+          name="projectName"
+          onChange={e => handleGenericChange('edit_project', e, setFormData)}
+        />
 
         <label>Description</label>
-        <textarea className="input-textarea" placeholder={formData.edit_project.description || "New Description"} name="description" onChange={e => handleGenericChange('edit_project', e, setFormData)}></textarea>
+        <textarea
+          className="input-textarea"
+          placeholder={formData.edit_project.description || "New Description"}
+          name="description"
+          onChange={e => handleGenericChange('edit_project', e, setFormData)}
+        ></textarea>
 
-        <button className="apply-button" onClick={e => handleSubmit('edit_project', e, formData)}>Apply</button>
+        <button
+          className="apply-button"
+          onClick={e => handleSubmit('edit_project', e, formData)}
+        >
+          Apply
+        </button>
       </div>
     </>
   );
@@ -244,27 +267,48 @@ function RenderForm({ mode, formData, setFormData }) {
   }
 }
 
+function ModePickerSidebar({ setMode }) {
+
+  const modes = [
+    { key: 'create_project', label: 'Create Project' },
+    { key: 'create_task', label: 'Create Task' },
+    { key: 'edit_project', label: 'Edit Project' },
+    { key: 'edit_task', label: 'Edit Task' },
+  ];
+
+  return (
+    <aside className='sidebar'>
+      <div className="sidebar-cards">
+        {modes.map(mode => (
+          <button
+            key={mode.key}
+            className="sidebar-card"
+            onClick={() => setMode(mode.key)}
+            style={{ width: 'calc(100% - 20px)', margin: '10px' }}
+          >
+            {mode.label}
+          </button>
+        ))}
+      </div>
+    </aside>
+  );
+}
+
 export default function ProjectsPage() {
 
   const [mode, setMode] = useState('create_project');
   const [formData, setFormData] = useState(FormState);
 
+
   return (
-    <div style={{ display: 'flex', height: '80vh', gap: '2rem' }}>
-      {/* LEFT PANEL: NAVIGATION COMMANDS */}
-      <div className="sidebar">
-        <button onClick={() => setMode('create_project')}>Create Project</button>
-        <button onClick={() => setMode('create_task')}>Create Task</button>
-        <button onClick={() => setMode('edit_project')}>Edit Project</button>
-        <button onClick={() => setMode('edit_task')}>Edit Task</button>
-      </div>
+    <div className="container">
+      {/* LEFT PANEL: MODE SELECTION */}
+      <ModePickerSidebar setMode={setMode} />
 
       {/* RIGHT PANEL: FORM CONTEXT */}
-      <div style={{ flex: 1, position: 'relative', border: '1px solid #ddd', padding: '2rem' }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          <RenderForm mode={mode} formData={formData} setFormData={setFormData} />
-        </div>
-      </div>
+      <main className='main-form-area'>
+        <RenderForm mode={mode} formData={formData} setFormData={setFormData} />
+      </main>
     </div>
   );
 }

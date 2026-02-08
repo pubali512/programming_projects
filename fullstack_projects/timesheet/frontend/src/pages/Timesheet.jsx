@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+
+import '../styles/Common.css';
 import '../styles/Timesheet.css';
 import { getProjects, getTasks, getTimeEntriesForWeek } from '../services/api';
 import { getMondayOfWeek, getMondayOfCurrentWeek, } from '../components/Utils';
@@ -61,23 +63,28 @@ function handleTimeEntryChange(field, e, entryIdx, selectedDay, timesheetData, s
 
 function DayPickerSidebar({ selectedDay, setSelectedDay, setSelectedDateOfMonday, timesheetData }) {
   return (
-    <aside className="day-picker-sidebar">
+    <aside className="sidebar">
       <div className="week-selector">
         <label>Week Of </label>
-        <input type="date" setdate={getMondayOfCurrentWeek()} onChange={e => handleDateSelection(e, setSelectedDateOfMonday)} />
+        <input 
+          type="date" 
+          setdate={getMondayOfCurrentWeek()} 
+          onChange={e => handleDateSelection(e, setSelectedDateOfMonday)} 
+        />
       </div>
 
       <div className="day-list">
         {Object.keys(timesheetData).map(day => (
           <div
             key={day}
-            className={`day-card ${selectedDay === day ? 'active' : ''}`}
+            className={`sidebar-card ${selectedDay === day ? 'active' : ''}`}
             onClick={() => setSelectedDay(day)}
           >
-            <div className="day-info">
+            <div className="sidebar-info">
               <span className="day-name">{day}</span>
               <span className="day-total">
-                {timesheetData[day].reduce((sum, t) => sum + Number(t.hours || 0), 0)}h
+                {timesheetData[day].reduce((sum, t) => 
+                  sum + Number(t.hours || 0), 0)}h
               </span>
             </div>
           </div>
@@ -85,7 +92,9 @@ function DayPickerSidebar({ selectedDay, setSelectedDay, setSelectedDateOfMonday
       </div>
 
       <div>
-        <center><button className="apply-button">Apply</button></center>
+        <center>
+          <button className="apply-button">Apply</button>
+        </center>
       </div>
     </aside>
   );
@@ -94,7 +103,6 @@ function DayPickerSidebar({ selectedDay, setSelectedDay, setSelectedDateOfMonday
 function TaskDetailsArea({ timesheetData, setTimesheetData, selectedDay, selectedDateOfMonday, addTask }) {
 
   console.log(selectedDay);
-
 
   return (
     <main className="task-details-area">
@@ -226,6 +234,7 @@ export default function TimesheetPage() {
     Sunday: []
   });
 
+
   const addTask = () => {
     const newTask = { projectId: '', taskId: '', hours: '', notes: '' };
     setTimesheetData(prev => ({
@@ -234,8 +243,10 @@ export default function TimesheetPage() {
     }));
   };
 
+  
+
   return (
-    <div className="timesheet-container">
+    <div className="container">
       {/* LEFT: Week Picker & Day Summary */}
       <DayPickerSidebar
         selectedDay={selectedDay}
