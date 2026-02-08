@@ -34,11 +34,11 @@ const FormState = {
 
 
 // A truly generic handler
-function handleGenericChange(formName, e, setFormData) {  
-  
+function handleGenericChange(formName, e, setFormData) {
+
   const { name, value } = e.target;
 
-  console.log(`Form: ${formName}, Field: ${name}, Value: ${value}`); 
+  console.log(`Form: ${formName}, Field: ${name}, Value: ${value}`);
   setFormData(prev => ({
     ...prev,
     [formName]: {
@@ -53,106 +53,181 @@ function handleSubmit(formName, e, formData) {
 }
 
 
-function CreateProjectForm({formData, setFormData}) {
+function CreateProjectForm({ formData, setFormData }) {
 
   return (
     <>
       <h3 className='form-header'>Create New Project</h3>
       <div className="form-grid">
-      <label>Project Name</label>
-      <input type="text" className="input-field-small" placeholder={formData.create_project.projectName || "Project Name"} name="projectName" onChange={e => handleGenericChange('create_project', e, setFormData)}/>
+        <label>Project Name</label>
+        <input
+          type="text"
+          className="input-field-small"
+          placeholder={formData.create_project.projectName || "Project Name"}
+          name="projectName"
+          onChange={e => handleGenericChange('create_project', e, setFormData)}
+        />
 
-      <label>Project ID</label>
-      <input type="text" className="input-field-small" placeholder={formData.create_project.projectId || "Project ID"} name="projectId" onChange={e => handleGenericChange('create_project', e, setFormData)}/>
+        <label>Project ID</label>
+        <input
+          type="text"
+          className="input-field-small"
+          placeholder={formData.create_project.projectId || "Project ID"}
+          name="projectId"
+          onChange={e => handleGenericChange('create_project', e, setFormData)}
+        />
 
-      <label>Description</label>
-      <textarea className="input-textarea" placeholder={formData.create_project.description || "Project Description"} name="description" onChange={e => handleGenericChange('create_project', e, setFormData)}></textarea>
+        <label>Description</label>
+        <textarea
+          className="input-textarea"
+          placeholder={formData.create_project.description || "Project Description"}
+          name="description"
+          onChange={e => handleGenericChange('create_project', e, setFormData)}
+        ></textarea>
 
-      <button className="apply-button" onClick={e => handleSubmit('create_project', e, formData)}>Apply</button>
+        <button
+          className="apply-button"
+          onClick={e => handleSubmit('create_project', e, formData)}
+        >
+          Apply
+        </button>
       </div>
     </>
-    );
+  );
 }
 
-function CreateTaskForm({formData, setFormData}) {
+function CreateTaskForm({ formData, setFormData }) {
   return (
     <>
       <h3 className='form-header'>Create New Task</h3>
       <div className="form-grid">
         <label>Project</label>
-        <select className="input-field-small" name="project" value={formData.create_task.project} onChange={e => handleGenericChange('create_task', e, setFormData)}>
+        <select
+          className="input-field-small"
+          name="project"
+          value={formData.create_task.project}
+          onChange={e => handleGenericChange('create_task', e, setFormData)}
+        >
           <option>Select Existing Project...</option>
           {projects.map(p => <option key={p.id}>{p.name}</option>)}
         </select>
 
         <label>Task Name</label>
-        <input type="text" className="input-field-small" placeholder={formData.create_task.taskName || "Task Name"} name="taskName" onChange={e => handleGenericChange('create_task', e, setFormData)} />
+        <input
+          type="text"
+          className="input-field-small"
+          placeholder={formData.create_task.taskName || "Task Name"}
+          name="taskName"
+          onChange={e => handleGenericChange('create_task', e, setFormData)}
+        />
 
         <label>Task ID</label>
-        <input type="text" className="input-field-small" placeholder={formData.create_task.taskId || "Task ID"} name="taskId" onChange={e => handleGenericChange('create_task', e, setFormData)} />
+        <input
+          type="text"
+          className="input-field-small"
+          placeholder={formData.create_task.taskId || "Task ID"}
+          name="taskId"
+          onChange={e => handleGenericChange('create_task', e, setFormData)}
+        />
 
         <label>Description</label>
-        <textarea className="input-textarea" placeholder={formData.create_task.description || "Description"} name="description" onChange={e => handleGenericChange('create_task', e, setFormData)}></textarea>
+        <textarea
+          className="input-textarea"
+          placeholder={formData.create_task.description || "Description"}
+          name="description"
+          onChange={e => handleGenericChange('create_task', e, setFormData)}
+        ></textarea>
 
-        <button className="apply-button" onClick={e => handleSubmit('create_task', e, formData)}>Apply</button>
+        <button
+          className="apply-button"
+          onClick={e => handleSubmit('create_task', e, formData)}
+        >
+          Apply
+        </button>
       </div>
     </>
   );
 }
 
-function EditProjectForm({formData, setFormData}) {
+function EditProjectForm({ formData, setFormData }) {
   return (
     <>
       <h3 className='form-header'>Edit Project</h3>
       <div className="form-grid">
-      <label>Select Project</label>
-      <select className="input-field-small" name="selectProjectId" value={formData.edit_project.selectProjectId} onChange={e => handleGenericChange('edit_project', e, setFormData)}>
-        <option>Select Project to Edit...</option>
-        {projects.map(p => <option key={p.id}>{p.id} ({p.name})</option>)}
-      </select>
+        <label>Select Project</label>
+        <select className="input-field-small" name="selectProjectId" value={formData.edit_project.selectProjectId} onChange={e => handleGenericChange('edit_project', e, setFormData)}>
+          <option>Select Project to Edit...</option>
+          {projects.map(p => <option key={p.id}>{p.id} ({p.name})</option>)}
+        </select>
 
-      <label>Project Name</label>
-      <input type="text" className="input-field-small" placeholder={formData.edit_project.projectName || "New Project Name"} name="projectName" onChange={e => handleGenericChange('edit_project', e, setFormData)} />
+        <label>Project Name</label>
+        <input type="text" className="input-field-small" placeholder={formData.edit_project.projectName || "New Project Name"} name="projectName" onChange={e => handleGenericChange('edit_project', e, setFormData)} />
 
-      <label>Description</label>
-      <textarea className="input-textarea" placeholder={formData.edit_project.description || "New Description"} name="description" onChange={e => handleGenericChange('edit_project', e, setFormData)}></textarea>
+        <label>Description</label>
+        <textarea className="input-textarea" placeholder={formData.edit_project.description || "New Description"} name="description" onChange={e => handleGenericChange('edit_project', e, setFormData)}></textarea>
 
-      <button className="apply-button" onClick={e => handleSubmit('edit_project', e, formData)}>Apply</button>
+        <button className="apply-button" onClick={e => handleSubmit('edit_project', e, formData)}>Apply</button>
       </div>
     </>
-    );
+  );
 }
 
-function EditTaskForm({formData, setFormData}) {
+function EditTaskForm({ formData, setFormData }) {
   return (
     <>
       <h3 className='form-header'>Edit Task</h3>
       <div className="form-grid">
         <label>Project</label>
-        <select className="input-field-small" name="selectProjectId" value={formData.edit_task.selectProjectId} onChange={e => handleGenericChange('edit_task', e, setFormData)}>
+        <select
+          className="input-field-small"
+          name="selectProjectId"
+          value={formData.edit_task.selectProjectId}
+          onChange={e => handleGenericChange('edit_task', e, setFormData)}
+        >
           <option>Select Project...</option>
           {projects.map(p => <option key={p.id}>{p.name}</option>)}
         </select>
 
         <label>Task</label>
-        <select className="input-field-small" name="selectTaskId" value={formData.edit_task.selectTaskId} onChange={e => handleGenericChange('edit_task', e, setFormData)}>
+        <select
+          className="input-field-small"
+          name="selectTaskId"
+          value={formData.edit_task.selectTaskId}
+          onChange={e => handleGenericChange('edit_task', e, setFormData)}
+        >
           <option>Select Task...</option>
         </select>
 
         <label>Task Name</label>
-        <input type="text" className="input-field-small" placeholder={formData.edit_task.taskName || "New Task Name"} name="taskName" onChange={e => handleGenericChange('edit_task', e, setFormData)} />
+        <input
+          type="text"
+          className="input-field-small"
+          placeholder={formData.edit_task.taskName || "New Task Name"}
+          name="taskName"
+          onChange={e => handleGenericChange('edit_task', e, setFormData)}
+        />
 
         <label>Description</label>
-        <textarea className="input-textarea" placeholder={formData.edit_task.description || "New Description"} name="description" onChange={e => handleGenericChange('edit_task', e, setFormData)}></textarea>
+        <textarea
+          className="input-textarea"
+          placeholder={formData.edit_task.description || "New Description"}
+          name="description"
+          onChange={e => handleGenericChange('edit_task', e, setFormData)}
+        ></textarea>
 
-        <button className="apply-button" onClick={e => handleSubmit('edit_task', e, formData)}>Apply</button>
+        <button
+          className="apply-button"
+          onClick={e => handleSubmit('edit_task', e, formData)}
+        >
+          Apply
+        </button>
       </div>
     </>
   );
 }
 
 
-function RenderForm({mode, formData, setFormData}) {
+function RenderForm({ mode, formData, setFormData }) {
   console.log(`Rendering form for mode: ${mode}`);
   console.log(formData);
 
@@ -172,7 +247,7 @@ function RenderForm({mode, formData, setFormData}) {
 export default function ProjectsPage() {
 
   const [mode, setMode] = useState('create_project');
-  const [formData, setFormData] = useState(FormState); 
+  const [formData, setFormData] = useState(FormState);
 
   return (
     <div style={{ display: 'flex', height: '80vh', gap: '2rem' }}>
@@ -187,7 +262,7 @@ export default function ProjectsPage() {
       {/* RIGHT PANEL: FORM CONTEXT */}
       <div style={{ flex: 1, position: 'relative', border: '1px solid #ddd', padding: '2rem' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          <RenderForm mode={mode} formData={formData} setFormData={setFormData}/>
+          <RenderForm mode={mode} formData={formData} setFormData={setFormData} />
         </div>
       </div>
     </div>

@@ -10,6 +10,20 @@ export const tasks = [
 ];
 
 export const timeEntries = [
-  { id: 1, taskId: 1, date: '2026-01-25', hours: 2, notes: 'Wireframes' },
-  { id: 2, taskId: 2, date: '2026-01-25', hours: 3, notes: 'REST API setup' },
+  { projectId: 1, taskId: 1, date: '2026-01-25', hours: 2, notes: 'Wireframes' },
+  { projectId: 2, taskId: 2, date: '2026-01-25', hours: 3, notes: 'REST API setup' },
 ];
+
+
+export function getProjects() {
+    return projects; 
+}
+
+export function getTasks(task) {
+    return tasks.filter(t => t.projectId === task.projectId);
+}
+
+export function getTimeEntriesForWeek(startDate) {
+    // For simplicity, return all entries. In a real app, filter by date range.
+    return timeEntries; 
+}   
