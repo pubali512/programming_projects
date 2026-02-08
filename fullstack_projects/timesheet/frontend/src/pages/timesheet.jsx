@@ -100,7 +100,11 @@ function TaskDetailsArea({ timesheetData, selectedDay, selectedDate, addTask }) 
 
   return (
     <main className="task-details-area">
-      <h2><center>Log {selectedDay} ({convertDayToDate(selectedDate, selectedDay)})</center></h2>
+      <h2>
+        <center>
+          Log {selectedDay} ({convertDayToDate(selectedDate, selectedDay)})
+        </center>
+      </h2>
 
       <div className="task-header-row">
         <span>Project</span>
@@ -117,13 +121,27 @@ function TaskDetailsArea({ timesheetData, selectedDay, selectedDate, addTask }) 
           <select>
             <option>Select Task</option>
           </select>
-          <input type="number" placeholder="0.0" className="hrs-input" />
-          <input type="text" placeholder="What did you do?" className="note-input" />
+          <input
+            type="number"
+            placeholder="0.0"
+            className="hrs-input"
+          />
+          <input
+            type="text"
+            placeholder="What did you do?"
+            className="note-input"
+          />
         </div>
       ))}
 
-      <center><button className="add-task-button" onClick={addTask}>+ Add Task</button></center>
-      
+      <center>
+        <button
+          className="add-task-button"
+          onClick={addTask}
+        >
+          + Add Task
+        </button>
+      </center>
     </main>
   );
 }
@@ -159,10 +177,20 @@ export default function TimesheetPage() {
   return (
     <div className="timesheet-container">
       {/* LEFT: Week Picker & Day Summary */}
-      <DayPickerSidebar selectedDay={selectedDay} setSelectedDay={setSelectedDay} setSelectedDate={setSelectedDate} timesheetData={timesheetData} />
+      <DayPickerSidebar
+        selectedDay={selectedDay}
+        setSelectedDay={setSelectedDay}
+        setSelectedDate={setSelectedDate}
+        timesheetData={timesheetData}
+      />
 
       {/* RIGHT: Task List for selected day */}
-      <TaskDetailsArea timesheetData={timesheetData} selectedDay={selectedDay} selectedDate={selectedDate} addTask={addTask} />
+      <TaskDetailsArea
+        timesheetData={timesheetData}
+        selectedDay={selectedDay}
+        selectedDate={selectedDate}
+        addTask={addTask}
+      />
     </div>
   );
 }
