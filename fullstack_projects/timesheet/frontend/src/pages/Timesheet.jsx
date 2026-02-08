@@ -1,31 +1,11 @@
 import React, { useState } from 'react';
 import '../styles/Timesheet.css';
-import { projects, tasks } from '../services/api';
+import { getProjects, getTasks, getTimeEntriesForWeek } from '../services/api';
+import { getMondayOfWeek, getMondayOfCurrentWeek, } from '../components/Utils';
 
 
-// dateStr is in YYYY-MM-DD format 
-function getMondayOfCurrentWeek() {
-  const today = new Date();
-  return getMondayOfWeek(today.toISOString().split('T')[0]);
 
-};
-
-function getMondayOfWeek(dateStr) {
-  const tmpDate = new Date(dateStr);
-  const dayIndex = tmpDate.getDay(); // 0 (Sun) to 6 (Sat)
-
-  // Calculate how many days to move back to get to Monday
-  // If today is Sunday (0), we move back 6 days. 
-  // Otherwise, we move back (dayIndex - 1) days.
-  const diff = tmpDate.getDate() - dayIndex + (dayIndex === 0 ? -6 : 1);
-  const monday = new Date(tmpDate.setDate(diff));
-
-  // Return in YYYY-MM-DD format for your HTML date input
-  return monday.toISOString().split('T')[0];
-
-}
-
-function convertDayToDate(selectedDate, dayName) {
+function convertDayToDate(selectedDateOfMonday, dayName) {
   const dayOffsets = {
     'Monday': 0,
     'Tuesday': 1,
@@ -36,37 +16,55 @@ function convertDayToDate(selectedDate, dayName) {
     'Sunday': 6
   };
 
-  console.log(`Converting ${dayName} with offset ${dayOffsets[dayName]} from base date ${selectedDate}`); 
+  console.log(`Converting ${dayName} with offset ${dayOffsets[dayName]} from base date ${selectedDateOfMonday}`);
 
-  const convDate = new Date(selectedDate);
-  convDate.setDate(convDate.getDate() + dayOffsets[dayName]); 
+  const convDate = new Date(selectedDateOfMonday);
+  convDate.setDate(convDate.getDate() + dayOffsets[dayName]);
   return convDate.toISOString().split('T')[0];
 }
 
-function handleDateSelection(e, setSelectedDate) {
-  const selectedDate = getMondayOfWeek(e.target.value);
+function handleDateSelection(e, setSelectedDateOfMonday) {
+  const selectedDateOfMonday = getMondayOfWeek(e.target.value);
 
-  console.log(`Selected week starting date: ${selectedDate}`);
-  setSelectedDate(selectedDate);
+  console.log(`Selected week starting date: ${selectedDateOfMonday}`);
+  setSelectedDateOfMonday(selectedDateOfMonday);
 }
 
-function handleTimeEntryChange(e, selectedDay, timesheetData, setTimesheetData, entryId) {
+function handleTimeEntryChange(field, e, entryIdx, selectedDay, timesheetData, setTimesheetData) {
   const { name, value } = e.target;
 
-  console.log(`Updating entry ${entryId} for ${selectedDay}: ${name} = ${value}`);
+  console.log(`Updating entry ${entryIdx} for ${selectedDay}: ${field} = ${value}`);
+
+  const dayEntries = timesheetData[selectedDay];
+  const entry = dayEntries[entryIdx];
+
+  const updatedEntry = {
+    ...entry,
+    [field]: value
+  };
+
+  const updatedDayEntries = [
+    ...dayEntries.slice(0, entryIdx),
+    updatedEntry,
+    ...dayEntries.slice(entryIdx + 1)
+  ];
+
   setTimesheetData(prev => ({
     ...prev,
-    [selectedDay]: prev[selectedDay].map(entry => entry.id === entryId ? { ...entry, [name]: value } : entry)
+    [selectedDay]: updatedDayEntries
   }));
+
+  console.log(`Updated timesheet data for ${selectedDay}:`, timesheetData[selectedDay]);
+
 }
 
 
-function DayPickerSidebar({ selectedDay, setSelectedDay, setSelectedDate, timesheetData }) {
+function DayPickerSidebar({ selectedDay, setSelectedDay, setSelectedDateOfMonday, timesheetData }) {
   return (
     <aside className="day-picker-sidebar">
       <div className="week-selector">
         <label>Week Of </label>
-        <input type="date" setdate={getMondayOfCurrentWeek()} onChange={e => handleDateSelection(e, setSelectedDate)} />
+        <input type="date" setdate={getMondayOfCurrentWeek()} onChange={e => handleDateSelection(e, setSelectedDateOfMonday)} />
       </div>
 
       <div className="day-list">
@@ -93,7 +91,7 @@ function DayPickerSidebar({ selectedDay, setSelectedDay, setSelectedDate, timesh
   );
 }
 
-function TaskDetailsArea({ timesheetData, selectedDay, selectedDate, addTask }) {
+function TaskDetailsArea({ timesheetData, setTimesheetData, selectedDay, selectedDateOfMonday, addTask }) {
 
   console.log(selectedDay);
 
@@ -102,7 +100,7 @@ function TaskDetailsArea({ timesheetData, selectedDay, selectedDate, addTask }) 
     <main className="task-details-area">
       <h2>
         <center>
-          Log {selectedDay} ({convertDayToDate(selectedDate, selectedDay)})
+          Log {selectedDay} ({convertDayToDate(selectedDateOfMonday, selectedDay)})
         </center>
       </h2>
 
@@ -113,22 +111,84 @@ function TaskDetailsArea({ timesheetData, selectedDay, selectedDate, addTask }) 
         <span>Notes</span>
       </div>
 
-      {timesheetData[selectedDay].map((entry) => (
+      {timesheetData[selectedDay].map((entry, index) => (
         <div key={entry.id} className="task-row">
-          <select>
-            <option>Select Project</option>
+          {/* PROJECT SELECT */}
+          <select
+            value={entry.projectId || ''}
+            onChange={(e) =>
+              handleTimeEntryChange(
+                'projectId',
+                e,
+                index,
+                selectedDay,
+                timesheetData,
+                setTimesheetData
+              )
+            }
+          >
+            <option value="">Select Project</option>
+            {getProjects().map(p => (
+              <option key={p.id} value={p.id}>
+                {p.id} ({p.name})
+              </option>
+            ))}
           </select>
-          <select>
-            <option>Select Task</option>
+
+          {/* TASK SELECT (Dependent) */}
+          <select
+            value={entry.taskId || ''}
+            disabled={!entry.projectId}
+            onChange={(e) =>
+              handleTimeEntryChange(
+                'taskId',
+                e,
+                index,
+                selectedDay,
+                timesheetData,
+                setTimesheetData
+              )
+            }
+          >
+            <option value="">Select Task</option>
+            {getTasks({ projectId: entry.projectId }).map(t => (
+              <option key={t.id} value={t.id}>
+                {t.id} ({t.name})
+              </option>
+            ))}
           </select>
+
+          {/* HOURS & NOTES */}
           <input
             type="number"
-            placeholder="0.0"
+            value={entry.hours || ''}
+            name="hours"
+            onChange={(e) =>
+              handleTimeEntryChange(
+                'hours',
+                e,
+                index,
+                selectedDay,
+                timesheetData,
+                setTimesheetData
+              )
+            }
             className="hrs-input"
           />
           <input
             type="text"
-            placeholder="What did you do?"
+            value={entry.notes || ''}
+            name="notes"
+            onChange={(e) =>
+              handleTimeEntryChange(
+                'notes',
+                e,
+                index,
+                selectedDay,
+                timesheetData,
+                setTimesheetData
+              )
+            }
             className="note-input"
           />
         </div>
@@ -150,7 +210,7 @@ function TaskDetailsArea({ timesheetData, selectedDay, selectedDate, addTask }) 
 export default function TimesheetPage() {
 
   // Date of year selected
-  const [selectedDate, setSelectedDate] = useState(getMondayOfCurrentWeek());
+  const [selectedDateOfMonday, setSelectedDateOfMonday] = useState(getMondayOfCurrentWeek());
 
   // Currently selected day of the week 
   const [selectedDay, setSelectedDay] = useState('Monday');
@@ -167,7 +227,7 @@ export default function TimesheetPage() {
   });
 
   const addTask = () => {
-    const newTask = { id: Date.now(), project: '', task: '', hours: '', note: '' };
+    const newTask = { projectId: '', taskId: '', hours: '', notes: '' };
     setTimesheetData(prev => ({
       ...prev,
       [selectedDay]: [...prev[selectedDay], newTask]
@@ -180,15 +240,16 @@ export default function TimesheetPage() {
       <DayPickerSidebar
         selectedDay={selectedDay}
         setSelectedDay={setSelectedDay}
-        setSelectedDate={setSelectedDate}
+        setSelectedDateOfMonday={setSelectedDateOfMonday}
         timesheetData={timesheetData}
       />
 
       {/* RIGHT: Task List for selected day */}
       <TaskDetailsArea
         timesheetData={timesheetData}
+        setTimesheetData={setTimesheetData}
         selectedDay={selectedDay}
-        selectedDate={selectedDate}
+        selectedDateOfMonday={selectedDateOfMonday}
         addTask={addTask}
       />
     </div>
