@@ -238,12 +238,16 @@ function EditTaskForm({ formData, setFormData }) {
           onChange={e => handleGenericChange('edit_task', e, setFormData)}
         ></textarea>
 
+      </div>
+      <div>
+        <center>
         <button
           className="apply-button"
           onClick={e => handleSubmit('edit_task', e, formData)}
         >
           Apply
         </button>
+        </center>
       </div>
     </>
   );
