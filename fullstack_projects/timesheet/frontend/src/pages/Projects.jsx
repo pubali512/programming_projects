@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
-import './projects.css';
-import '../components/common.css';
+import '../styles/Projects.css';
+import '../styles/Common.css';
 
 // Import mock data or API services as needed
 import { projects, tasks } from '../services/api';
