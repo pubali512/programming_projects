@@ -29,3 +29,7 @@ export function getMondayOfWeek(dateStr) {
     return monday.toISOString().split('T')[0];
 
 }
+
+/* user.email=94544796+KingK412@users.noreply.github.com 
+   user.name=Pubali Mazumder
+   user.email=pubali.k.m@googlemail.com*/
