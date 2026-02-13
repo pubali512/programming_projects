@@ -1,63 +1,74 @@
+
+/* Common styles for the entire application */ 
 /* The container for the entire form */
-
-.form-header {
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
-  font-weight: bold;
+:root {
+  --sidebar-bg: #f8f9fa;
+  --active-blue: #e7f1ff;
+  --text-main: #212529;
+  --accent-blue: #0056d2;
+  --border-color: #dee2e6;
 }
 
-.form-grid {
-  display: grid;
-  /* Column 1: width of text | Column 2: flexible space */
-  grid-template-columns: minmax(120px, auto) 1fr; 
-  column-gap: 20px; /* Space between label and input */
-  row-gap: 15px;    /* Space between rows */
-  align-items: top; /* Vertically centers label with input */
-  max-width: 650px; /* Overall form width constraint */
+
+/* 
+ * Common styles for all pages 
+ * 
+ * - Each page has a container 
+ * - A sidebar on the left (20% width) for navigation or selection 
+ * - A main content area on the right (80% width) for forms or details 
+ */
+
+.container {
+  display: flex;
+  height: calc(100vh - 100px);
 }
 
-/* Force labels to the left column */
-.form-grid label {
-  grid-column: 1;
-  font-weight: 600;
-  text-align: left;
+/* Sidebar Styling */
+.sidebar {
+  width: 300px;
+  background: var(--sidebar-bg);
+  border-right: 1px solid var(--border-color);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
-/* Force inputs to the right column */
-.form-grid input, 
-.form-grid select, 
-.form-grid textarea {
-  grid-column: 2;
-  padding: 8px;
+.sidebar-card {
+  padding: 15px;
+  background: white;
   border: 1px solid var(--border-color);
-  border-radius: 4px;
-  width: 100%; /* Fill the column space */
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+  margin-bottom: 10px;
 }
 
-/* Specific overrides for your classes */
-.input-field-small {
-  max-width: 250px;
+.sidebar-card.active {
+  border-color: var(--accent-blue);
+  background: var(--active-blue);
 }
 
-.input-field-large {
-  max-width: 600px;
+.sidebar-info {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 600;
 }
 
-.input-textarea {
-  height: 150px;
-  resize: vertical; /* Allow vertical resizing */
-}
 
 .apply-button {
-  grid-column: 2;      /* Move it to the right column */
-  justify-self: center;   /* Align it to the right edge of that column */
-  margin-top: 20px;    /* Give it some space from the last input */
-  
+  margin-top: 20px;
   padding: 10px 40px;
   background-color: var(--accent-blue);
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  font-weight: bold;
+
+  align-self: center;
+}
+
+.apply-button:hover {
+  background: #f0f0f0;
+  border-color: #999;
 }

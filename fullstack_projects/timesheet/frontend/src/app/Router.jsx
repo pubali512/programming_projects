@@ -1,7 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
-import ProjectsPage from '../pages/projects';
-import TimesheetPage from '../pages/timesheet';
-import DashboardPage from '../pages/dashboard';
+import ProjectsPage from '../pages/Projects';
+import TimesheetPage from '../pages/Timesheet';
+import DashboardPage from '../pages/Dashboard';
 
 export default function AppRouter() {
     return (
