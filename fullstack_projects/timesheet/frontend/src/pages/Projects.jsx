@@ -241,12 +241,12 @@ function EditTaskForm({ formData, setFormData }) {
       </div>
       <div>
         <center>
-        <button
-          className="apply-button"
-          onClick={e => handleSubmit('edit_task', e, formData)}
-        >
-          Apply
-        </button>
+          <button
+            className="apply-button"
+            onClick={e => handleSubmit('edit_task', e, formData)}
+          >
+            Apply
+          </button>
         </center>
       </div>
     </>
