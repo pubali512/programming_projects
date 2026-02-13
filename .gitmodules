@@ -2,3 +2,6 @@
 	path = nn_projects
 	url=https://github.com/pubali512/nn_projects.git
 	# url = git@acc_pm:pubali512/nn_projects.git
+[submodule "fullstack_projects"]
+	path = fullstack_projects
+	url = https://github.com/pubali512/fullstack_projects.git
