@@ -5,3 +5,6 @@
 [submodule "fullstack_projects"]
 	path = fullstack_projects
 	url = https://github.com/pubali512/fullstack_projects.git
+[submodule "cpp_projects"]
+	path = cpp_projects
+	url = acc_pm:pubali512/cpp_projects.git
