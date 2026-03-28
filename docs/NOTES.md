@@ -4,7 +4,7 @@ SSH authentication works in the following way:
 
 - SSH private and public keys are stored in \<home\>/.ssh directory.
 
-- SSH hosts can be defined in \<home\>/config file. For example, 
+- SSH hosts can be defined in \<home\>/.ssh/config file. For example, 
 
 ```
 Host acc_something
