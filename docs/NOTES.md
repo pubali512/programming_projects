@@ -1,14 +1,4 @@
-# Overall 
-
-This is generic repository for my programming projects.
-
-- nn_projects: This is a repository for my neural network projects. It contains code for various neural network architectures and implementations.
-- fullstack_projects: This is a repository for my full stack development projects. It contains code for various web applications and services.
-
-
-# Handy git and ssh commands 
-
-## Notes on SSH authentication for Remote Desktop at GitHub  
+# Notes on SSH authentication at GitHub  
 
 SSH authentication works in the following way: 
 
@@ -41,12 +31,21 @@ ssh -T acc_something
 git remote set-url origin git@acc_something:<username>/<repository>.git
 ``` 
 
+For a concrete example, if the SSH host is defined as `acc_something` in the config file, and the repository is `my-repo` owned by `my-username`, then the remote URL should be set to: 
+
+```
+git@acc_something:my-username/my-repo.git
+```
+
+
 - The command to test the remote URL is: 
 
 ```
 git remote -v
 ```
 
+*NOTE:* 
+- The remote repository URL can be set per repository. This means that different repositories can use different SSH hosts and keys if needed. 
 
 
 
