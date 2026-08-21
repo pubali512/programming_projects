@@ -7,3 +7,6 @@
 [submodule "cpp_projects"]
 	path = cpp_projects
 	url = https://github.com/pubali512/cpp_projects.git
+[submodule "py_projects"]
+	path = py_projects
+	url = git@acc_pm:pubali512/py_projects.git
