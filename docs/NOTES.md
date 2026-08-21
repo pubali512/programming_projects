@@ -1,3 +1,87 @@
+# Notes on Creating a New Repo, Pushing, and Adding as a Submodule
+
+A quick reference for turning a local directory into a GitHub repo and linking it as a submodule in a parent repo.
+
+
+
+## 1. Initialize the New Repo
+
+```bash
+cd path/to/new_project/
+
+git init
+git add .
+git commit -m "feat: initial commit"
+```
+
+
+## 2. Push to GitHub
+
+Create the empty repo on GitHub first (no README, no .gitignore), then:
+
+```bash
+# Add the remote (using an SSH alias defined in ~/.ssh/config)
+git remote add origin git@<ssh-alias>:<github-user>/<repo-name>.git 
+
+# Rename default branch to main and push
+git branch -M main
+git push -u origin main
+```
+
+**~/.ssh/config example entry:**
+```
+Host acc_something
+    HostName github.com
+    User git
+    IdentityFile ~/.ssh/acc_something 
+```
+
+
+
+## 3. Add as a Submodule in the Parent Repo
+
+```bash
+cd path/to/parent_repo/
+
+# Register the submodule (clones the remote into the subfolder)
+git submodule add git@<ssh-alias>:<github-user>/<repo-name>.git <subfolder-name>
+
+# Commit the generated .gitmodules file and the submodule pointer
+git add .gitmodules <subfolder-name>
+git commit -m "chore: add <repo-name> as git submodule"
+git push
+```
+
+After this the parent repo tracks the submodule at a specific commit SHA, not the full file tree.
+
+
+
+## 4. Cloning a Repo That Has Submodules
+
+```bash
+# Clone and initialize all submodules in one step
+git clone --recurse-submodules git@<ssh-alias>:<github-user>/<parent-repo>.git
+
+# Or, if already cloned without submodules
+git submodule update --init --recursive
+```
+
+
+
+## 5. Updating a Submodule to Its Latest Remote Commit
+
+```bash
+cd path/to/parent_repo/<subfolder-name>/
+git pull origin main
+
+cd ..
+git add <subfolder-name>
+git commit -m "chore: bump <repo-name> submodule to latest"
+git push
+```
+
+
+---
 # Notes on SSH authentication at GitHub  
 
 SSH authentication works in the following way: 
